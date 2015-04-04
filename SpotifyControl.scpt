@@ -113,38 +113,45 @@ on run argv
 			end tell
 			
 		else if command is equal to "info" then
-			tell application "Spotify" 
-				set myTrack to name of current track
-				set myArtist to artist of current track
-				set myAlbum to album of current track
-				set tM to round (duration of current track / 60) rounding down
-				set tS to duration of current track mod 60
-				set myTime to tM as text & "min " & tS as text & "s"
-				set nM to round (player position / 60) rounding down
-				set nS to round (player position mod 60) rounding down
-				set nowAt to nM as text & "min " & nS as text & "s"
-				set info to "Current track:"
-				set info to info & "\n Artist:   " & myArtist
-				set info to info & "\n Track:    " & myTrack
-				set info to info & "\n Album:    " & myAlbum 
-				set info to info & "\n URI:      " & spotify url of current track
-				set info to info & "\n Duration: " & mytime & " ("& duration of current track & " seconds)" 
-				set info to info & "\n Now at:   " & nowAt
-				set info to info & "\n Player:   " & player state
-				set info to info & "\n Volume:   " & sound volume
-				if shuffling then set info to info & "\n Shuffle is on."
-				if repeating then set info to info & "\n Repeat is on."
-			end tell
-			return info
+			my getInfo()
 		end if
 		
 		tell application "Spotify"
-			set shuf to ""
-			if shuffling then set shuf to "\n[shuffle on]"
 			if player state as text is equal to "playing"
-				return "Now playing: " & artist of current track & " - " & name of current track & shuf
+				my getInfo()
 			end if
 		end tell
+
+
 	end using terms from
 end run
+
+
+on getInfo()
+	set info to "Error."
+	tell application "Spotify" 
+		set myTrack to name of current track
+		set myArtist to artist of current track
+		set myAlbum to album of current track
+		set tM to round (duration of current track / 60) rounding down
+		set tS to duration of current track mod 60
+		set myTime to tM as text & "min " & tS as text & "s"
+		set nM to round (player position / 60) rounding down
+		set nS to round (player position mod 60) rounding down
+		set nowAt to player position
+		set info to "{"
+		set info to info & "\n \"artist\":   \"" & myArtist & "\","
+		set info to info & "\n \"track\":    \"" & myTrack & "\","
+		set info to info & "\n \"album\":    \"" & myAlbum & "\","
+		set info to info & "\n \"URI\":      \"" & spotify url of current track & "\","
+		set info to info & "\n \"duration\": \"" & mytime & " ("& duration of current track & " seconds)" & "\","
+		set info to info & "\n \"player\":   \"" & player state & "\""
+		set info to info & "\n \"position\":   \"" & nowAt & "\"\n"
+		set info to info & "}"
+	end tell
+	return info
+end getInfo
+
+
+
 
