@@ -10,6 +10,12 @@ class Command
 		end
 	end 
 
+	def self.play_pause
+		buildScript String <<-END 
+			tell application "Spotify" to playpause
+		END
+	end
+
 	def self.pause
 		buildScript "tell application \"Spotify\" to pause"
 	end
@@ -164,8 +170,10 @@ end
 command = ARGV[0]
 arg1 = ARGV[1]
 case command.downcase 
-	when 'play' 
+	when 'play', 'start' 
 		Command.play arg1
+	when 'play/pause'
+		Command.play_pause
 	when 'pause', 'stop'
 		Command.pause
 	when 'next'
