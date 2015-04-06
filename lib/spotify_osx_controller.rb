@@ -1,7 +1,6 @@
 require "spotify_osx_controller/version"
 
 module SpotifyOsxController
-	class << self
 		def self.play(url)
 			if url
 				buildScript  "tell application \"Spotify\" to play track \"#{url}\"\n"
@@ -165,7 +164,5 @@ module SpotifyOsxController
 		def self.osascript(script) 
 	  		system 'osascript', *script.split(/\n/).map { |line| ['-e', line] }.flatten
 		end
-
-	end
 
 end
