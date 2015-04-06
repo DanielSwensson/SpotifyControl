@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+require "spotify_osx_controller"
+
+command = ARGV[0]
+arg1 = ARGV[1]
+case command.downcase 
+	when 'play', 'start' 
+		SpotifyOsxController.play arg1
+	when 'play/pause'
+		SpotifyOsxController.play_pause
+	when 'pause', 'stop'
+		SpotifyOsxController.pause
+	when 'next'
+		SpotifyOsxController.next
+	when 'previous'
+		SpotifyOsxController.previous
+	when 'jump'
+		SpotifyOsxController.jump arg1
+	when 'forward'
+		SpotifyOsxController.forward arg1
+	when 'rewind'
+		SpotifyOsxController.rewind arg1
+	when 'volume'
+		SpotifyOsxController.volume arg1
+	when 'shuffle'
+		SpotifyOsxController.shuffle
+	when 'repeat'
+		SpotifyOsxController.repeat
+	when 'info'
+		SpotifyOsxController.info
+		exit
+end
+
+SpotifyOsxController.info
