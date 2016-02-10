@@ -15,6 +15,10 @@ module SpotifyOsxController
 			END
 		end
 
+		def self.stop
+			pause
+		end
+
 		def self.pause
 			buildScript "tell application \"Spotify\" to pause"
 		end
