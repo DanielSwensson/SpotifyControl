@@ -11,7 +11,10 @@ Gem::Specification.new do |spec|
   spec.licenses      = ['MIT']
 
   spec.summary       = %q{Ruby wrapper for Spotify applescript API}
-  spec.description   = %q{Control Spotify running on a Mac}
+  spec.description   = <<-EOF 
+                        Run basic Spotify commands on OSX.
+                        Apple script forked from: https://github.com/dronir/SpotifyControl
+                       EOF
   spec.homepage      = "https://github.com/DanielSwensson/SpotifyControl"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
