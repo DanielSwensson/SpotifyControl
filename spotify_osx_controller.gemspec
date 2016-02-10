@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Ruby wrapper for Spotify applescript API}
   spec.description   = <<-EOF 
-                        Run basic Spotify commands on OSX. \n
+                        Run basic Spotify commands on OSX.
                         Apple script forked from: https://github.com/dronir/SpotifyControl
                        EOF
   spec.homepage      = "https://github.com/DanielSwensson/SpotifyControl"
