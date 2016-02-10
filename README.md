@@ -2,6 +2,8 @@
 
 CLI for Spotify running on OSX
 
+Apple script forked from: [dronir/SpotifyControl](https://github.com/dronir/SpotifyControl)
+
 ## Installation
 
 Add this line to your application's Gemfile:
