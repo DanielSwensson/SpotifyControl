@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "spotify_osx_controller"
   spec.version       = SpotifyOsxController::VERSION
   spec.authors       = ["Daniel Swensson"]
-  spec.email         = ["danielswensson@hotmail.com"]
+  spec.email         = ["daniel@danielswensson.se"]
   spec.licenses      = ['MIT']
 
   spec.summary       = %q{Ruby wrapper for Spotify applescript API}
