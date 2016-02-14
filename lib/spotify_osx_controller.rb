@@ -126,7 +126,37 @@ module SpotifyOsxController
 			END
 		end
 
-		def self.info
+
+		def self.info 
+			buildScript String <<-END 
+				set info to "Error."
+				 tell application "Spotify"
+			        set myTrack to name of current track
+			        set myArtist to artist of current track
+			        set myAlbum to album of current track
+			        set tM to round ((duration of current track / 1000) / 60) rounding down
+			        set tS to round ((duration of current track / 1000) mod 60) rounding down
+			        set myTime to tM as text & "min " & tS as text & "s"
+			        set nM to round (player position / 60) rounding down
+			        set nS to round (player position mod 60) rounding down
+			        set nowAt to nM as text & "min " & nS as text & "s"
+			        set info to "Current track:"
+			        set info to info & "\n Artist:   " & myArtist
+			        set info to info & "\n Track:    " & myTrack
+			        set info to info & "\n Album:    " & myAlbum
+			        set info to info & "\n URI:      " & spotify url of current track
+			        set info to info & "\n Duration: " & mytime & " ("& (round ((duration of current track / 1000)) rounding down) & " seconds)"
+			        set info to info & "\n Now at:   " & nowAt
+			        set info to info & "\n Player:   " & player state
+			        set info to info & "\n Volume:   " & sound volume
+			        if shuffling then set info to info & "\n Shuffle is on."
+			        if repeating then set info to info & "\n Repeat is on."
+      			end tell
+				return info
+			END
+		end	
+
+		def self.info_json
 			buildScript String <<-END 
 				set info to "Error."
 				tell application "Spotify" 

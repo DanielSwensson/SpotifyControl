@@ -1,34 +1,58 @@
 #!/usr/bin/env ruby
 require "spotify_osx_controller"
+require "trollop"
 
-command = ARGV[0]
-arg1 = ARGV[1]
-case command.downcase 
-	when 'play', 'start' 
-		SpotifyOsxController.play arg1
-	when 'play/pause'
-		SpotifyOsxController.play_pause
-	when 'pause', 'stop'
-		SpotifyOsxController.pause
-	when 'next'
-		SpotifyOsxController.next
-	when 'previous'
-		SpotifyOsxController.previous
-	when 'jump'
-		SpotifyOsxController.jump arg1
-	when 'forward'
-		SpotifyOsxController.forward arg1
-	when 'rewind'
-		SpotifyOsxController.rewind arg1
-	when 'volume'
-		SpotifyOsxController.volume arg1
-	when 'shuffle'
-		SpotifyOsxController.shuffle
-	when 'repeat'
-		SpotifyOsxController.repeat
-	when 'info'
-		SpotifyOsxController.info
-		exit
+
+opts = Trollop::options do
+  	banner <<-EOS
+OSX CLI for Spotify
+
+Usage:
+	spotify_osx_controller [command]
+
+Where [command]	is one of the following:
+
+EOS
+	opt :play,            'Start playback of the given track, where <s> is the spotify URI',    							type: :string,  short: 'p', default: nil 
+	opt :play_pause,      'Play/pause playback',		  																	type: :boolean, short: 'P'
+	opt :stop,            'Stop playback'              
+	opt :next,            'Play next track'       	  
+	opt :previous,        'Play previous track',                                                                                            short: 'N'        
+	opt :jump, 			  'Jump to position given position of the current track, where <i> is track position in seconds', 	type: :integer
+	opt :forward,         'Jump <i> number of seconds ahead', 																type: :integer
+	opt :rewind,		  'Rewind <i> number of seconds backwards', 														type: :integer
+	opt :volume,		  'Set playback volume to <i>, where <i> is number between 0 and 100', 								type: :integer
+	opt :shuffle, 		  'Toggle shuffle',			  																		type: :boolean, short: 'S'
+	opt :repeat,		  'Toggle repeat',				  																	type: :boolean, short: 'R'
+	opt :info,			  'Display information about the current track'
+	conflicts :play, :play_pause, :next, :previous, :jump, :forward, :rewind, :volume, :shuffle, :repeat, :info 
 end
 
-SpotifyOsxController.info
+
+
+if 	opts[:play]	
+	SpotifyOsxController.play opts[:play]
+elsif opts[:play_pause]
+	SpotifyOsxController.play_pause
+elsif opts[:stop]
+	SpotifyOsxController.pause
+elsif opts[:next]
+	SpotifyOsxController.next
+elsif opts[:previous]
+	SpotifyOsxController.previous
+elsif opts[:jump]
+	SpotifyOsxController.jump opts[:jump]
+elsif opts[:forward]
+	SpotifyOsxController.forward opts[:forward]
+elsif opts[:rewind]
+	SpotifyOsxController.rewind opts[:rewind]
+elsif opts[:volume]
+	Trollop::die :volume, "must be between 0 and 100" if opts[:volume] < 0 or opts[:volume] > 100 
+	SpotifyOsxController.volume opts[:volume]
+elsif opts[:shuffle]
+	SpotifyOsxController.shuffle
+elsif opts[:repeat]
+	SpotifyOsxController.repeat
+elsif opts[:info]
+	SpotifyOsxController.info
+end
