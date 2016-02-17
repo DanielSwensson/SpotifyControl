@@ -7,19 +7,20 @@ Apple script forked from: [dronir/SpotifyControl](https://github.com/dronir/Spot
 ## Command-line options
 
 ```
-  -p, --play <s>:       Start playback of the given track, where <s> is the spotify URI
-  -P, --play-pause:     Play/pause playback
-  -s, --stop:           Stop playback
-  -n, --next:           Play next track
-  -N, --previous:       Play previous track
-  -j, --jump <i>:       Jump to position given position of the current track, where <i> is track position in
-                       	seconds
-  -f, --forward <i>:    Jump <i> number of seconds ahead
-  -r, --rewind <i>:     Rewind <i> number of seconds backwards
-  -v, --volume <i>:     Set playback volume to <i>, where <i> is number between 0 and 100
-  -S, --shuffle:        Toggle shuffle
-  -R, --repeat:         Toggle repeat
-  -i, --info:           Display information about the current track
+spotify_osx_controller [options] play [-t, --track=<name>] [-a, --artist=<name>] [-A, --album=<name>] 		Start playback
+spotify_osx_controller [options] play-pause 								Play/pause playback
+spotify_osx_controller [options] stop									Stop playback
+spotify_osx_controller [options] next									Play next track
+spotify_osx_controller [options] previous								Play previous track
+spotify_osx_controller [options] jump [--seconds=<seconds>]						Jump to <seconds> of current track
+spotify_osx_controller [options] forward [--seconds=<seconds>]						Jump <seconds> number of seconds ahead
+spotify_osx_controller [options] rewind [--seconds=<seconds>]						Rewind <i> number of seconds backwards
+
+	Where available [options] are the following:
+  -v, --volume=<i>    Set playback volume to <i>, where <i> is number between 0 and 100
+  -S, --shuffle       Toggle shuffle
+  -R, --repeat        Toggle repeat
+  -i, --info          Display information about the current track
 ```
 
 ## Installation
