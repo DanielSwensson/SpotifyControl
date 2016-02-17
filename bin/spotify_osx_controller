@@ -3,56 +3,94 @@ require "spotify_osx_controller"
 require "trollop"
 
 
+SUB_COMMANDS = %w(play play-pause stop next previous jump forward rewind)
 opts = Trollop::options do
-  	banner <<-EOS
-OSX CLI for Spotify
+	banner <<-EOS
+	OSX CLI for Spotify
 
 Usage:
-	spotify_osx_controller [command]
 
-Where [command]	is one of the following:
+spotify_osx_controller [options] play [--track=<name>] [--artist=<name>] [--album=<name>] 		Start playback
+spotify_osx_controller [options] play-pause 								Play/pause playback
+spotify_osx_controller [options] stop									Stop playback
+spotify_osx_controller [options] next									Play next track
+spotify_osx_controller [options] previous								Play previous track
+spotify_osx_controller [options] jump [--seconds=<seconds>]						Jump to <seconds> of current track
+spotify_osx_controller [options] forward [--seconds=<seconds>]						Jump <seconds> number of seconds ahead
+spotify_osx_controller [options] rewind [--seconds=<seconds>]						Rewind <i> number of seconds backwards
 
-EOS
-	opt :play,            'Start playback of the given track, where <s> is the spotify URI',    							type: :string,  short: 'p', default: nil 
-	opt :play_pause,      'Play/pause playback',		  																	type: :boolean, short: 'P'
-	opt :stop,            'Stop playback'              
-	opt :next,            'Play next track'       	  
-	opt :previous,        'Play previous track',                                                                                            short: 'N'        
-	opt :jump, 			  'Jump to position given position of the current track, where <i> is track position in seconds', 	type: :integer
-	opt :forward,         'Jump <i> number of seconds ahead', 																type: :integer
-	opt :rewind,		  'Rewind <i> number of seconds backwards', 														type: :integer
+	Where available [options] are the following:
+
+	EOS
+                 
 	opt :volume,		  'Set playback volume to <i>, where <i> is number between 0 and 100', 								type: :integer
 	opt :shuffle, 		  'Toggle shuffle',			  																		type: :boolean, short: 'S'
 	opt :repeat,		  'Toggle repeat',				  																	type: :boolean, short: 'R'
-	opt :info,			  'Display information about the current track'
-	conflicts :play, :play_pause, :next, :previous, :jump, :forward, :rewind, :volume, :shuffle, :repeat, :info 
+	opt :info,			  'Display information about the current track',													type: :boolean, short: 'i'
+	stop_on SUB_COMMANDS 
 end
 
 
+def global_cmds (opts)
+	if opts[:volume]
+		Trollop::die :volume, "must be between 0 and 100" if opts[:volume] < 0 or opts[:volume] > 100 
+		SpotifyOsxController.volume opts[:volume]
+	end	
+	if opts[:shuffle]
+		SpotifyOsxController.shuffle
+	end
+	if opts[:repeat]
+		SpotifyOsxController.repeat
+	end
+	if opts[:info]
+		SpotifyOsxController.info
+	end
+end
 
-if 	opts[:play]	
-	SpotifyOsxController.play opts[:play]
-elsif opts[:play_pause]
+
+cmd = ARGV.shift
+case cmd
+when "play"
+	cmd_opts = Trollop::options do
+		opt :track,  "Track to play", type: :strings, short: 't', default: []
+		opt :artist, "Artist to play", type: :strings, short: 'a', default: []
+		opt :album,  "Album to play", type: :strings, short: 'A', default: []
+	end
+	SpotifyOsxController.play track: cmd_opts[:track], artist: cmd_opts[:artist], album: cmd_opts[:album]
+when "play-pause"	
 	SpotifyOsxController.play_pause
-elsif opts[:stop]
+when "stop"
 	SpotifyOsxController.pause
-elsif opts[:next]
+when "next"
 	SpotifyOsxController.next
-elsif opts[:previous]
+when "previous"
 	SpotifyOsxController.previous
-elsif opts[:jump]
-	SpotifyOsxController.jump opts[:jump]
-elsif opts[:forward]
-	SpotifyOsxController.forward opts[:forward]
-elsif opts[:rewind]
-	SpotifyOsxController.rewind opts[:rewind]
-elsif opts[:volume]
-	Trollop::die :volume, "must be between 0 and 100" if opts[:volume] < 0 or opts[:volume] > 100 
-	SpotifyOsxController.volume opts[:volume]
-elsif opts[:shuffle]
-	SpotifyOsxController.shuffle
-elsif opts[:repeat]
-	SpotifyOsxController.repeat
-elsif opts[:info]
-	SpotifyOsxController.info
+when "jump"
+	cmd_opts = Trollop::options do
+		opt :seconds, "Position in seconds to start play from", type: :integer, short: 's', required: true
+	end
+	Trollop::die :seconds, "must be greater that 0" if cmd_opts[:seconds] < 0
+	SpotifyOsxController.jump cmd_opts[:seconds]
+when "forward"
+	cmd_opts = Trollop::options do
+		opt :seconds, "Number of seconds to jump ahead", type: :integer, short: 's', required: true
+	end
+
+	SpotifyOsxController.forward cmd_opts[:seconds]
+when "rewind"
+	cmd_opts = Trollop::options do
+		opt :seconds, "Number of seconds to rewind", type: :integer, short: 's', required: true
+	end
+
+	SpotifyOsxController.rewind cmd_opts[:seconds]
+
+when nil
+	global_cmds opts
+	run_global = true
+else
+	Trollop::die "unknown subcommand #{cmd.inspect}"
 end
+
+global_cmds opts if !run_global
+
+

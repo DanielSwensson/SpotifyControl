@@ -1,9 +1,18 @@
 require "spotify_osx_controller/version"
+require "spotify_osx_controller/search.rb"
 
 module SpotifyOsxController
-		def self.play(url)
-			if url
-				buildScript  "tell application \"Spotify\" to play track \"#{url}\"\n"
+
+		def self.play(parameters = {})
+			if !parameters.values.all? &:empty?
+				search = Search.new(parameters)
+
+				if search.any?
+					uri = search.first.uri
+					buildScript  "tell application \"Spotify\" to play track \"#{uri}\"\n"
+				else 
+					puts "Error: no results"
+				end
 			else 
 				buildScript "tell application \"Spotify\" to play\n"
 			end
