@@ -7,7 +7,7 @@ Apple script forked from: [dronir/SpotifyControl](https://github.com/dronir/Spot
 ## Command-line options
 
 ```
-spotify_osx_controller [options] play [-t=<name>] [-a=<name>] [--A=<name>] 	Start playback
+spotify_osx_controller [options] play [--track=<name>][--artist=<name>][--album=<name>] Start playback
 spotify_osx_controller [options] play-pause 						Play/pause playback
 spotify_osx_controller [options] stop								Stop playback
 spotify_osx_controller [options] next								Play next track
