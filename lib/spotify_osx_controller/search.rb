@@ -22,8 +22,12 @@ module SpotifyOsxController
 
 		private 
 
-		def run_query () 
-			RSpotify::Track.search @query 
+		def run_query ()
+			if @track.empty? 
+				RSpotify::Album.search @query
+			else
+				RSpotify::Track.search @query
+			end		 
 		end
 
 		def parse (array)
