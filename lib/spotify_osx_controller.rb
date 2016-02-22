@@ -8,7 +8,6 @@ module SpotifyOsxController
 				search = Search.new(parameters)
 
 				if search.any?
-					puts search.first
 					uri = search.first.uri
 					buildScript  "tell application \"Spotify\" to play track \"#{uri}\"\n"
 				else 
