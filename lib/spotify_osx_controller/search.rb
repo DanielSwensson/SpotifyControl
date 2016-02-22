@@ -5,9 +5,9 @@ module SpotifyOsxController
 	class Search
 
 		def initialize (parameters = {})
-			@track = parse parameters[:track]
-			@artist = parse parameters[:artist]
-			@album = parse parameters[:album]
+			@track = parameters[:track]
+			@artist = parameters[:artist]
+			@album = parameters[:album]
 			@query = construct_query
 			@results = run_query
 		end
@@ -23,22 +23,18 @@ module SpotifyOsxController
 		private 
 
 		def run_query ()
-			if @track.empty? 
+			if !@track
 				RSpotify::Album.search @query
 			else
 				RSpotify::Track.search @query
 			end		 
 		end
 
-		def parse (array)
-			array.join('+') if array
-		end
-
 		def construct_query
 			query = ""
-			query += "artist:#{@artist} " if !@artist.empty? 
-			query += "track:#{@track} " if !@track.empty?
-			query += "album:#{@album}" if !@album.empty?
+			query += "artist:#{@artist} " if @artist
+			query += "track:#{@track} " if @track
+			query += "album:#{@album}" if @album
 			query
 		end
 	end

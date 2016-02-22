@@ -47,16 +47,27 @@ def global_cmds (opts)
 	end
 end
 
+def parse (array)
+	array.join('+') if array
+end
+
+
 
 cmd = ARGV.shift
 case cmd
 when "play"
 	cmd_opts = Trollop::options do
-		opt :track,  "Track to play", type: :strings, short: 't', default: []
-		opt :artist, "Artist to play", type: :strings, short: 'a', default: []
-		opt :album,  "Album to play", type: :strings, short: 'A', default: []
+		opt :track,  "Track to play", type: :strings, short: 't', default: nil
+		opt :artist, "Artist to play", type: :strings, short: 'a', default: nil
+		opt :album,  "Album to play", type: :strings, short: 'A', default: nil
 	end
-	SpotifyOsxController.play track: cmd_opts[:track], artist: cmd_opts[:artist], album: cmd_opts[:album]
+
+	params = Hash.new
+	params[:track] = parse(cmd_opts[:track]) if cmd_opts[:track]
+	params[:artist] = parse(cmd_opts[:artist]) if cmd_opts[:artist]
+	params[:album] = parse(cmd_opts[:album]) if cmd_opts[:album]
+	
+	SpotifyOsxController.play params
 when "play-pause"	
 	SpotifyOsxController.play_pause
 when "stop"
